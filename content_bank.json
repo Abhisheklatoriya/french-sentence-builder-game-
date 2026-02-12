@@ -1,0 +1,74 @@
+{
+  "A1": [
+    {"en": "I am Abhi.", "fr": "Je suis Abhi.", "hints": ["Start with the subject pronoun: Je", "Use the verb 'être' in the present: suis", "Name comes at the end; keep the period."]},
+    {"en": "I live in Toronto.", "fr": "J'habite à Toronto.", "hints": ["Start with J' + verb", "The verb is 'habiter' in present: habite", "Use the preposition for a city: à"]},
+    {"en": "I like coffee.", "fr": "J'aime le café.", "hints": ["Start with J' + verb", "The verb is 'aimer' in present: aime", "Use an article before the noun: le"]},
+    {"en": "Where is the bathroom?", "fr": "Où sont les toilettes ?", "hints": ["Question word first: Où", "Toilettes is plural in French", "Remember French spacing: space before ?"]},
+    {"en": "It is 8 o'clock.", "fr": "Il est huit heures.", "hints": ["Start with Il est", "Use 'heures' (plural) after numbers except 1", "No 'à' needed here."]},
+    {"en": "I have two sisters.", "fr": "J'ai deux sœurs.", "hints": ["Start with J' + avoir", "Avoir in present: ai", "Plural noun, keep the s at the end."]},
+    {"en": "I am tired.", "fr": "Je suis fatigué.", "hints": ["Use être: Je suis", "Adjective after the verb", "If female: fatiguée."]},
+    {"en": "We are at home.", "fr": "Nous sommes à la maison.", "hints": ["Start with Nous", "Être in present for 'nous': sommes", "Use à + la for 'home': à la maison"]},
+    {"en": "I don't understand.", "fr": "Je ne comprends pas.", "hints": ["Negation wraps the verb: ne ... pas", "Verb is comprendre in present: comprends", "Keep 'ne' before the verb."]},
+    {"en": "Can you help me, please?", "fr": "Vous pouvez m'aider, s'il vous plaît ?", "hints": ["Formal 'you' is Vous", "Verb is pouvoir: pouvez", "Use the infinitive with apostrophe: m'aider"]}
+  ],
+  "A2": [
+    {"en": "I need to buy a SIM card today.", "fr": "J'ai besoin d'acheter une carte SIM aujourd'hui.", "hints": ["Start with J'ai besoin de", "Use de + infinitive: d'acheter", "Use feminine article: une carte"]},
+    {"en": "We are going to the grocery store after work.", "fr": "Nous allons à l'épicerie après le travail.", "hints": ["Near future uses aller + infinitive", "Aller for 'nous': allons", "Use à + l' before a vowel"]},
+    {"en": "I would like a table for two people.", "fr": "Je voudrais une table pour deux personnes.", "hints": ["Polite request: Je voudrais", "Table is feminine: une", "Pour + number + personnes"]},
+    {"en": "How much does this cost?", "fr": "Combien ça coûte ?", "hints": ["Start with Combien", "Use 'ça' for 'this'", "Verb is coûter: coûte"]},
+    {"en": "I have to leave early tomorrow.", "fr": "Je dois partir tôt demain.", "hints": ["Use devoir: Je dois", "Then infinitive: partir", "Adverb placement: tôt before demain"]},
+    {"en": "He is looking for his keys.", "fr": "Il cherche ses clés.", "hints": ["Start with Il", "Verb is chercher: cherche", "Plural possessive: ses clés"]},
+    {"en": "I take the subway every morning.", "fr": "Je prends le métro tous les matins.", "hints": ["Verb is prendre: prends", "Use the article: le métro", "Time phrase: tous les matins"]},
+    {"en": "There is a meeting at 3 PM.", "fr": "Il y a une réunion à quinze heures.", "hints": ["Existence uses Il y a", "Réunion is feminine: une", "24-hour time: à quinze heures"]},
+    {"en": "I'm going to call you later.", "fr": "Je vais t'appeler plus tard.", "hints": ["Near future: je vais + infinitive", "Call = appeler with t'", "Time phrase at the end: plus tard"]},
+    {"en": "We can't park here.", "fr": "Nous ne pouvons pas nous garer ici.", "hints": ["Negation: ne ... pas", "Pouvoir for nous: pouvons", "Reflexive infinitive: nous garer"]}
+  ],
+  "B1": [
+    {"en": "I started learning French last year.", "fr": "J'ai commencé à apprendre le français l'année dernière.", "hints": ["Passé composé with avoir", "Commencer → commencé", "Use à + infinitive: à apprendre"]},
+    {"en": "She told me that the train was late.", "fr": "Elle m'a dit que le train était en retard.", "hints": ["Passé composé: m'a dit", "Use que for reported speech", "Imparfait for state: était"]},
+    {"en": "We decided to stay at home because it was snowing.", "fr": "Nous avons décidé de rester à la maison parce qu'il neigeait.", "hints": ["Main action: avons décidé", "Décider de + infinitive", "Background: imparfait (neigeait)"]},
+    {"en": "If I have time, I'll call you tonight.", "fr": "Si j'ai le temps, je t'appellerai ce soir.", "hints": ["Si + present → future", "Have time: j'ai le temps", "Future of appeler: appellerai"]},
+    {"en": "I had to redo the report, even though it was almost finished.", "fr": "J'ai dû refaire le rapport, même s'il était presque terminé.", "hints": ["Devoir in passé composé: j'ai dû", "Refaire = redo", "State in imparfait: était"]},
+    {"en": "Can you explain the problem to me again?", "fr": "Pouvez-vous m'expliquer le problème encore une fois ?", "hints": ["Formal question with inversion", "Pronoun before infinitive: m'expliquer", "Phrase: encore une fois"]},
+    {"en": "I don't know whether he is coming.", "fr": "Je ne sais pas s'il vient.", "hints": ["Negation: ne ... pas", "Savoir: sais", "Whether = si (s'il)"]},
+    {"en": "We met in a café near the station.", "fr": "Nous nous sommes rencontrés dans un café près de la gare.", "hints": ["Se rencontrer is reflexive", "Passé composé with être: sommes", "Place phrase: près de la gare"]},
+    {"en": "I prefer taking the bus rather than driving.", "fr": "Je préfère prendre le bus plutôt que de conduire.", "hints": ["Préférer: préfère", "Infinitive: prendre", "Pattern: plutôt que de + infinitive"]},
+    {"en": "He got angry when he heard the news.", "fr": "Il s'est fâché quand il a entendu la nouvelle.", "hints": ["Reflexive: s'est fâché", "Second action: a entendu", "News: la nouvelle (fem.)"]}
+  ],
+  "B2": [
+    {"en": "I would have gone earlier if you had told me.", "fr": "Je serais parti plus tôt si tu me l'avais dit.", "hints": ["Conditional past: serais parti", "Si clause: plus-que-parfait (avais dit)", "Pronouns: me l' before avais dit"]},
+    {"en": "Although the plan was clear, the team hesitated.", "fr": "Bien que le plan soit clair, l'équipe a hésité.", "hints": ["Bien que → subjonctif", "Être (subj.) for il: soit", "Main action: a hésité"]},
+    {"en": "I asked them to send the files as soon as possible.", "fr": "Je leur ai demandé d'envoyer les fichiers dès que possible.", "hints": ["Leur ai demandé", "De + infinitive: d'envoyer", "Phrase: dès que possible"]},
+    {"en": "The more I practice, the better I understand.", "fr": "Plus je pratique, mieux je comprends.", "hints": ["Structure: Plus..., mieux...", "No 'de' needed", "Present tense in both parts"]},
+    {"en": "It is important that you do it today.", "fr": "Il est important que tu le fasses aujourd'hui.", "hints": ["Il est + adj + que → subjonctif", "Faire (subj.) for tu: fasses", "Pronoun le before verb"]},
+    {"en": "They have been working here for three years.", "fr": "Ils travaillent ici depuis trois ans.", "hints": ["Present tense with depuis", "Verb: travaillent", "Time: depuis trois ans"]},
+    {"en": "I realized that I had misunderstood your message.", "fr": "Je me suis rendu compte que j'avais mal compris ton message.", "hints": ["Se rendre compte: reflexive", "Earlier past: plus-que-parfait (j'avais)", "Mal compris = misunderstood"]},
+    {"en": "We need a solution that works for everyone.", "fr": "Nous avons besoin d'une solution qui fonctionne pour tout le monde.", "hints": ["Avoir besoin de", "De + une → d'une", "Relative clause: qui fonctionne"]},
+    {"en": "I don't think he knows what he's doing.", "fr": "Je ne pense pas qu'il sache ce qu'il fait.", "hints": ["Negative opinion often → subjonctif", "Savoir (subj.) for il: sache", "Expression: ce qu'il fait"]},
+    {"en": "If it were up to me, I would change the schedule.", "fr": "Si c'était à moi, je changerais l'horaire.", "hints": ["Hypothetical: si + imparfait", "Imparfait: c'était", "Conditional: changerais"]}
+  ],
+  "C1": [
+    {"en": "Had I known, I would have acted differently.", "fr": "Si j'avais su, j'aurais agi autrement.", "hints": ["Si clause: plus-que-parfait", "Conditional past: j'aurais agi", "Adverb: autrement"]},
+    {"en": "It is unlikely that they will approve the request.", "fr": "Il est peu probable qu'ils approuvent la demande.", "hints": ["Expression + que → subjonctif", "Approuver (subj.): approuvent", "Request: la demande"]},
+    {"en": "Not only did he apologize, but he also corrected the mistake.", "fr": "Non seulement il s'est excusé, mais il a aussi corrigé l'erreur.", "hints": ["Non seulement..., mais aussi...", "Reflexive: s'est excusé", "Main action: a corrigé"]},
+    {"en": "I insisted that we take a more cautious approach.", "fr": "J'ai insisté pour que nous adoptions une approche plus prudente.", "hints": ["Insister pour que → subjonctif", "Adopter (subj.) for nous: adoptions", "Approche: feminine"]},
+    {"en": "Whatever happens, we will meet the deadline.", "fr": "Quoi qu'il arrive, nous respecterons la date limite.", "hints": ["Fixed: Quoi qu'il arrive", "Future: respecterons", "Deadline: la date limite"]},
+    {"en": "I am not convinced that this method is reliable.", "fr": "Je ne suis pas convaincu que cette méthode soit fiable.", "hints": ["Negation/uncertainty → subjonctif", "Être (subj.) for elle: soit", "Méthode: cette"]},
+    {"en": "He claimed to have never received the email.", "fr": "Il a prétendu n'avoir jamais reçu l'email.", "hints": ["Past: a prétendu", "Negation with infinitive: n'avoir", "Past participle: reçu"]},
+    {"en": "As far as I'm concerned, the decision is justified.", "fr": "En ce qui me concerne, la décision est justifiée.", "hints": ["Fixed: En ce qui me concerne", "Décision: feminine", "Agreement: justifiée"]},
+    {"en": "We should have anticipated the risks earlier.", "fr": "Nous aurions dû anticiper les risques plus tôt.", "hints": ["Conditional past: aurions dû", "Infinitive: anticiper", "Time: plus tôt"]},
+    {"en": "It is essential that everyone be informed in advance.", "fr": "Il est essentiel que tout le monde soit informé à l'avance.", "hints": ["Il est + adj + que → subjonctif", "Être (subj.): soit", "Phrase: à l'avance"]}
+  ],
+  "C2": [
+    {"en": "Hardly had we begun when the system crashed.", "fr": "À peine avions-nous commencé que le système a planté.", "hints": ["À peine ... que", "Inversion: avions-nous", "Past: a planté"]},
+    {"en": "He spoke as though he had witnessed the scene himself.", "fr": "Il parlait comme s'il avait été témoin de la scène lui-même.", "hints": ["Comme si uses imparfait + plus-que-parfait", "Avoir été témoin = witness", "Emphasis: lui-même"]},
+    {"en": "No sooner said than done.", "fr": "Aussitôt dit, aussitôt fait.", "hints": ["Fixed expression", "Two past participles", "Keep the comma"]},
+    {"en": "The proposal, however well-intentioned, remains impractical.", "fr": "La proposition, si bien intentionnée soit-elle, demeure irréalisable.", "hints": ["Concession: si + adj + soit-elle", "Inversion: soit-elle", "Verb: demeure"]},
+    {"en": "They denied having deliberately misled the public.", "fr": "Ils ont nié avoir délibérément induit le public en erreur.", "hints": ["Nier + infinitive: avoir", "Induire ... en erreur", "Adverb: délibérément"]},
+    {"en": "Be that as it may, we must proceed.", "fr": "Quoi qu'il en soit, nous devons poursuivre.", "hints": ["Fixed: Quoi qu'il en soit", "Devoir: devons", "Verb: poursuivre"]},
+    {"en": "It is not so much the result as the method that worries me.", "fr": "Ce n'est pas tant le résultat que la méthode qui m'inquiète.", "hints": ["Structure: pas tant A que B", "Relative: qui + verb", "Pronoun: m'inquiète"]},
+    {"en": "He went so far as to question the legitimacy of the process.", "fr": "Il est allé jusqu'à remettre en cause la légitimité du processus.", "hints": ["Aller jusqu'à + infinitive", "Expression: remettre en cause", "Légitimité: feminine"]},
+    {"en": "I will not dwell on details that are irrelevant to the issue.", "fr": "Je ne m'attarderai pas sur des détails sans rapport avec la question.", "hints": ["Future: m'attarderai", "Negation: ne ... pas", "Sans rapport avec = irrelevant"]},
+    {"en": "Whether we like it or not, the change is inevitable.", "fr": "Qu'on le veuille ou non, le changement est inévitable.", "hints": ["Fixed: Qu'on le veuille ou non", "Subjonctif: veuille", "Main clause: est inévitable"]}
+  ]
+}
