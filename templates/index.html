@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🇫🇷 French Sentence Builder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #273548;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      --accent: #3b82f6;
+      --correct: #22c55e;
+      --wrong: #ef4444;
+
+      --c-pronoun: #3b82f6;
+      --c-verb: #ef4444;
+      --c-noun: #22c55e;
+      --c-func: #f59e0b;
+      --c-punct: #94a3b8;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    nav h1 { font-size: 1.1rem; font-weight: 700; flex: 1; white-space: nowrap; }
+
+    .level-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .level-pill {
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .level-pill:hover { border-color: var(--accent); color: var(--text); }
+    .level-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .stat-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .stat-chip span { color: var(--text); font-weight: 700; }
+
+    /* ---- LAYOUT ---- */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 700px) { .main { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    /* ---- LEFT PANEL ---- */
+    .prompt-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+                    letter-spacing: .08em; color: var(--text-dim); margin-bottom: 6px; }
+    .prompt-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .built-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+                   letter-spacing: .08em; color: var(--text-dim); margin-bottom: 8px; }
+    .built-area {
+      min-height: 58px;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .built-area.correct  { border-color: var(--correct); }
+    .built-area.wrong    { border-color: var(--wrong); }
+
+    .built-word {
+      background: var(--accent);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      user-select: none;
+    }
+    .built-word:hover { opacity: 0.75; transform: scale(0.96); }
+    .built-placeholder { color: var(--text-dim); font-size: 0.85rem; font-style: italic; }
+
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.primary:hover { background: #2563eb; border-color: #2563eb; }
+    .btn.success { background: var(--correct); border-color: var(--correct); color: #fff; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* feedback */
+    .feedback {
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .feedback.correct { background: #14532d44; border: 1px solid var(--correct); color: var(--correct); display: block; }
+    .feedback.wrong   { background: #7f1d1d44; border: 1px solid var(--wrong);   color: var(--wrong);   display: block; }
+
+    .answer-reveal {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+      display: none;
+    }
+    .answer-reveal span { color: var(--correct); font-weight: 600; }
+
+    /* hint */
+    .hint-box {
+      background: #1e3a5f;
+      border: 1px solid #3b5f8a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #93c5fd;
+      line-height: 1.5;
+    }
+    .hint-counter { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px; }
+
+    /* ---- RIGHT PANEL — BUCKETS ---- */
+    .bucket-panel { display: flex; flex-direction: column; gap: 14px; }
+
+    .bucket-section {}
+    .bucket-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .bucket-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .bucket-words { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .word-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 2px solid;
+      background: transparent;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s, transform 0.1s, opacity 0.2s;
+      user-select: none;
+    }
+    .word-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+    .word-btn:active { transform: scale(0.95); }
+
+    /* flat (no bucket) layout */
+    .flat-words { display: flex; flex-wrap: wrap; gap: 8px; }
+    .flat-word-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s, transform 0.1s;
+    }
+    .flat-word-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); }
+    .flat-word-btn:active { transform: scale(0.95); }
+
+    .all-used-msg {
+      color: var(--correct);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 0;
+    }
+
+    .bucket-action-row { display: flex; gap: 8px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <h1>🇫🇷 French Sentence Builder</h1>
+  <div class="level-pills" id="levelPills"></div>
+  <div class="stat-chip">XP <span id="statXP">0</span></div>
+  <div class="stat-chip">Score <span id="statScore">0/0</span></div>
+</nav>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="card" id="leftPanel">
+    <div class="prompt-label">Translate to French</div>
+    <div class="prompt-text" id="promptText">Loading…</div>
+
+    <div class="built-label">Your sentence</div>
+    <div class="built-area" id="builtArea">
+      <span class="built-placeholder" id="builtPlaceholder">Pick words from the right →</span>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnUndo" onclick="undo()">⬅ Undo</button>
+      <button class="btn" id="btnClear" onclick="clearBuilt()">🗑 Clear</button>
+      <button class="btn" id="btnHint" onclick="showNextHint()">💡 Hint</button>
+      <button class="btn primary" id="btnCheck" onclick="checkAnswer()">Check ✅</button>
+      <button class="btn success" id="btnNext" onclick="nextRound()" style="display:none">Next ▶</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="answer-reveal" id="answerReveal"></div>
+
+    <div class="hint-counter" id="hintCounter"></div>
+    <div class="hint-box" id="hintBox">Hit 💡 for a hint.</div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="card">
+    <div class="bucket-panel" id="bucketPanel">
+      <div style="color:var(--text-dim); font-size:0.85rem">Loading…</div>
+    </div>
+    <div class="bucket-action-row">
+      <button class="btn" onclick="shuffleWords()">Shuffle 🔀</button>
+      <button class="btn" onclick="nextRound()">New round 🎲</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LEVELS = {{ levels | tojson }};
+
+const BUCKETS = [
+  { label: "Pronouns",           types: ["pronoun"],                  color: "#3b82f6" },
+  { label: "Verbs",              types: ["verb"],                     color: "#ef4444" },
+  { label: "Nouns & Adjectives", types: ["noun", "adjective"],        color: "#22c55e" },
+  { label: "Function Words",     types: ["article", "prep", "other"], color: "#f59e0b" },
+  { label: "Punctuation",        types: ["punct"],                    color: "#94a3b8" },
+];
+
+let level = "A1";
+let round = null;   // {en, fr, fr_tokens, has_buckets, shuffled, hints}
+let built = [];     // [{tok, orig_idx}, ...]
+let hintIdx = 0;
+let progress = { xp: 0, correct: 0, attempts: 0, by_level: {} };
+let answered = false;
+
+// ---- Init ----
+async function init() {
+  renderLevelPills();
+  progress = await fetch("/api/progress").then(r => r.json());
+  updateStats();
+  await loadRound();
+}
+
+function renderLevelPills() {
+  const container = document.getElementById("levelPills");
+  container.innerHTML = LEVELS.map(l =>
+    `<button class="level-pill ${l === level ? 'active' : ''}"
+             onclick="changeLevel('${l}')">${l}</button>`
+  ).join("");
+}
+
+async function changeLevel(l) {
+  level = l;
+  renderLevelPills();
+  await loadRound();
+}
+
+// ---- Round ----
+async function loadRound() {
+  clearUI();
+  const data = await fetch(`/api/round?level=${level}`).then(r => r.json());
+  round = data;
+  built = [];
+  hintIdx = 0;
+  answered = false;
+
+  document.getElementById("promptText").textContent = round.en;
+  updateHintBox();
+  renderBuckets();
+}
+
+function clearUI() {
+  document.getElementById("builtArea").className = "built-area";
+  document.getElementById("builtArea").innerHTML =
+    `<span class="built-placeholder" id="builtPlaceholder">Pick words from the right →</span>`;
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("answerReveal").style.display = "none";
+  document.getElementById("btnNext").style.display = "none";
+  document.getElementById("btnCheck").style.display = "";
+}
+
+// ---- Word Buckets ----
+function usedIndices() { return new Set(built.map(w => w.orig_idx)); }
+
+function renderBuckets() {
+  const panel = document.getElementById("bucketPanel");
+  const used = usedIndices();
+  const available = round.shuffled.filter(e => !used.has(e.orig_idx));
+
+  if (available.length === 0) {
+    panel.innerHTML = `<div class="all-used-msg">All words placed! Hit <strong>Check ✅</strong></div>`;
+    return;
+  }
+
+  if (!round.has_buckets) {
+    // Flat layout
+    const btns = available.map(e =>
+      `<button class="flat-word-btn" onclick="addWord(${e.orig_idx})">${e.tok}</button>`
+    ).join("");
+    panel.innerHTML = `<div class="flat-words">${btns}</div>`;
+    return;
+  }
+
+  // Bucket layout
+  let html = "";
+  for (const bucket of BUCKETS) {
+    const entries = available.filter(e => bucket.types.includes(e.type));
+    if (!entries.length) continue;
+    const btns = entries.map(e =>
+      `<button class="word-btn"
+               style="color:${bucket.color}; border-color:${bucket.color}; background:${bucket.color}18"
+               onclick="addWord(${e.orig_idx})">${e.tok}</button>`
+    ).join("");
+    html += `
+      <div class="bucket-section">
+        <div class="bucket-header">
+          <div class="bucket-dot" style="background:${bucket.color}"></div>
+          <span style="color:${bucket.color}">${bucket.label}</span>
+        </div>
+        <div class="bucket-words">${btns}</div>
+      </div>`;
+  }
+  panel.innerHTML = html || `<div class="all-used-msg">All words placed! Hit <strong>Check ✅</strong></div>`;
+}
+
+// ---- Game actions ----
+function addWord(origIdx) {
+  if (answered) return;
+  const entry = round.shuffled.find(e => e.orig_idx === origIdx);
+  if (!entry) return;
+  built.push({ tok: entry.tok, orig_idx: entry.orig_idx });
+  renderBuilt();
+  renderBuckets();
+}
+
+function undo() {
+  if (answered || !built.length) return;
+  built.pop();
+  renderBuilt();
+  renderBuckets();
+}
+
+function clearBuilt() {
+  if (answered) return;
+  built = [];
+  hintIdx = 0;
+  renderBuilt();
+  renderBuckets();
+  updateHintBox();
+  document.getElementById("builtArea").className = "built-area";
+}
+
+function renderBuilt() {
+  const area = document.getElementById("builtArea");
+  if (!built.length) {
+    area.innerHTML = `<span class="built-placeholder">Pick words from the right →</span>`;
+    return;
+  }
+  area.innerHTML = built.map((w, i) =>
+    `<span class="built-word" title="Click to remove" onclick="removeAt(${i})">${w.tok}</span>`
+  ).join("");
+}
+
+function removeAt(idx) {
+  if (answered) return;
+  built.splice(idx, 1);
+  renderBuilt();
+  renderBuckets();
+}
+
+async function checkAnswer() {
+  if (!round || answered) return;
+  const res = await fetch("/api/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ built: built.map(w => w.tok), fr_tokens: round.fr_tokens }),
+  }).then(r => r.json());
+
+  answered = true;
+  progress.attempts++;
+  progress.by_level[level] = progress.by_level[level] || { correct: 0, attempts: 0 };
+  progress.by_level[level].attempts++;
+
+  const area = document.getElementById("builtArea");
+  const fb = document.getElementById("feedback");
+
+  if (res.correct) {
+    const gained = Math.max(2, 10 - 2 * hintIdx);
+    progress.xp += gained;
+    progress.correct++;
+    progress.by_level[level].correct++;
+    area.classList.add("correct");
+    fb.className = "feedback correct";
+    fb.textContent = `✅ Correct! +${gained} XP`;
+    document.getElementById("btnNext").style.display = "";
+    document.getElementById("btnCheck").style.display = "none";
+  } else {
+    area.classList.add("wrong");
+    fb.className = "feedback wrong";
+    let msg = "❌ Not quite.";
+    if (res.first_wrong !== null && res.first_wrong !== undefined)
+      msg += ` First mismatch at position ${res.first_wrong + 1}.`;
+    fb.textContent = msg;
+    const reveal = document.getElementById("answerReveal");
+    reveal.innerHTML = `Answer: <span>${round.fr}</span>`;
+    reveal.style.display = "block";
+    document.getElementById("btnNext").style.display = "";
+    document.getElementById("btnCheck").style.display = "none";
+  }
+
+  updateStats();
+  saveProgress();
+}
+
+function showNextHint() {
+  if (answered) return;
+  if (hintIdx < round.hints.length - 1) hintIdx++;
+  updateHintBox();
+}
+
+function updateHintBox() {
+  if (!round) return;
+  const box = document.getElementById("hintBox");
+  const counter = document.getElementById("hintCounter");
+  box.textContent = round.hints[hintIdx];
+  counter.textContent = `Hint ${hintIdx + 1} of ${round.hints.length}`;
+}
+
+function shuffleWords() {
+  if (!round) return;
+  for (let i = round.shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [round.shuffled[i], round.shuffled[j]] = [round.shuffled[j], round.shuffled[i]];
+  }
+  renderBuckets();
+}
+
+async function nextRound() {
+  await loadRound();
+}
+
+// ---- Progress ----
+function updateStats() {
+  document.getElementById("statXP").textContent = progress.xp;
+  document.getElementById("statScore").textContent = `${progress.correct}/${progress.attempts}`;
+}
+
+function saveProgress() {
+  fetch("/api/progress", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(progress),
+  });
+}
+
+init();
+</script>
+</body>
+</html>
