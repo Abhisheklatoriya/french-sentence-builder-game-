@@ -202,6 +202,8 @@ def init_state():
         st.session_state.level = "A1"
     if "round" not in st.session_state:
         st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
+    if "check_result" not in st.session_state:
+        st.session_state.check_result = None
 
 
 def persist_progress():
@@ -214,12 +216,14 @@ def persist_progress():
 def set_level(level):
     st.session_state.level = level
     st.session_state.round = new_round(st.session_state.bank, level)
+    st.session_state.check_result = None
 
 
 def clear_built():
     st.session_state.round["built"] = []
     st.session_state.round["built_indices"] = []
     st.session_state.round["hint_idx"] = 0
+    st.session_state.check_result = None
 
 
 def add_token(entry):
@@ -349,37 +353,47 @@ with col1:
     built_str = format_tokens(r["built"]) if r["built"] else "_(empty — click words on the right)_"
     st.code(built_str, language="text")
 
-    b1, b2, b3, b4 = st.columns([0.2, 0.2, 0.2, 0.4])
+    done = st.session_state.check_result is not None
+    b1, b2, b3, b4, b5 = st.columns([0.18, 0.18, 0.18, 0.28, 0.18])
     with b1:
-        if st.button("⬅ Undo"):
+        if st.button("⬅ Undo", disabled=done):
             undo_token()
     with b2:
-        if st.button("🗑 Clear"):
+        if st.button("🗑 Clear", disabled=done):
             clear_built()
     with b3:
-        if st.button("💡 Hint"):
+        if st.button("💡 Hint", disabled=done):
             next_hint()
     with b4:
-        submitted = st.button("Check ✅", type="primary")
+        if st.button("Check ✅", type="primary", disabled=done):
+            ok, msg = check_answer()
+            st.session_state.check_result = {"ok": ok, "msg": msg}
+            st.rerun()
+    with b5:
+        if st.button("Next ▶", disabled=not done):
+            st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
+            st.session_state.check_result = None
+            st.rerun()
 
     st.write("**Hint:**")
     st.info(r["hints"][r["hint_idx"]])
 
-    if submitted:
-        ok, msg = check_answer()
-        if ok:
-            st.success(msg)
+    result = st.session_state.check_result
+    if result:
+        if result["ok"]:
+            st.success(result["msg"])
             with st.expander("Show answer"):
                 st.write(r["fr"])
-            if st.button("Next ▶"):
-                st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
         else:
-            st.error(msg)
+            st.error(result["msg"])
+            with st.expander("Show answer"):
+                st.write(r["fr"])
 
 with col2:
     st.subheader("Word buckets")
 
     use_buckets = r["word_types"] is not None
+    done = st.session_state.check_result is not None
 
     if use_buckets:
         st.caption("Pick words from each bucket to build the sentence. Used words disappear.")
@@ -398,7 +412,7 @@ with col2:
                 btn_cols = st.columns(min(len(entries), 5))
                 for j, entry in enumerate(entries):
                     with btn_cols[j % 5]:
-                        if st.button(entry["tok"], key=f"bucket_{label}_{entry['orig_idx']}"):
+                        if st.button(entry["tok"], key=f"bucket_{label}_{entry['orig_idx']}", disabled=done):
                             add_token(entry)
                 st.write("")
 
@@ -410,7 +424,7 @@ with col2:
         for i, entry in enumerate(r["shuffled"]):
             if entry["orig_idx"] not in used:
                 with cols[i % 4]:
-                    if st.button(entry["tok"], key=f"tok_{i}_{entry['tok']}"):
+                    if st.button(entry["tok"], key=f"tok_{i}_{entry['tok']}", disabled=done):
                         add_token(entry)
 
     st.divider()
@@ -418,3 +432,4 @@ with col2:
         random.shuffle(r["shuffled"])
     if st.button("New round 🎲"):
         st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
+        st.session_state.check_result = None
