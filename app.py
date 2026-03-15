@@ -89,7 +89,6 @@ def parse_csv_content(csv_bytes: bytes) -> dict:
 
         bank[lvl].append({"en": en, "fr": fr, "hints": hints})
 
-    # ensure every level exists (even if empty)
     return bank
 
 
@@ -97,7 +96,6 @@ def parse_csv_content(csv_bytes: bytes) -> dict:
 # Game helpers
 # -------------------------
 def tokenize(fr: str):
-    # Keep punctuation as separate tokens; keep apostrophes inside tokens.
     raw = (
         fr.replace("?", " ?")
         .replace("!", " !")
@@ -125,18 +123,50 @@ def format_tokens(tokens):
 def new_round(bank, level):
     item = random.choice(bank[level])
     fr_tokens = tokenize(item["fr"])
-    shuffled = fr_tokens[:]
+    word_types = item.get("word_types")
+
+    # Build shuffled list of dicts with original index for dedup tracking
+    indexed = [{"tok": tok, "type": (word_types[i] if word_types else None), "orig_idx": i}
+               for i, tok in enumerate(fr_tokens)]
+    shuffled = indexed[:]
     random.shuffle(shuffled)
+
     return {
         "level": level,
         "en": item["en"],
         "fr": item["fr"],
         "fr_tokens": fr_tokens,
-        "shuffled": shuffled,
+        "word_types": word_types,
+        "shuffled": shuffled,       # list of {tok, type, orig_idx}
         "hints": item["hints"],
         "hint_idx": 0,
-        "built": [],
+        "built": [],                # list of tok strings in order
+        "built_indices": [],        # orig_idx of each built token (for dedup)
     }
+
+
+# -------------------------
+# Bucket display config
+# -------------------------
+BUCKET_ORDER = [
+    ("Pronouns",           ["pronoun"],                    "#1E90FF"),
+    ("Verbs",              ["verb"],                       "#FF4B4B"),
+    ("Nouns & Adjectives", ["noun", "adjective"],          "#21C55D"),
+    ("Function Words",     ["article", "prep", "other"],   "#F59E0B"),
+    ("Punctuation",        ["punct"],                      "#94A3B8"),
+]
+
+
+def get_display_buckets(r):
+    """Return list of (label, color, [entry, ...]) for non-empty buckets."""
+    used = set(r["built_indices"])
+    buckets = []
+    for label, types, color in BUCKET_ORDER:
+        entries = [e for e in r["shuffled"]
+                   if e["type"] in types and e["orig_idx"] not in used]
+        if entries:
+            buckets.append((label, color, entries))
+    return buckets
 
 
 def init_state():
@@ -146,11 +176,8 @@ def init_state():
         else:
             st.session_state.bank = {lvl: [] for lvl in LEVELS}
 
-    # If bank file is missing or broken, fail loudly with guidance
     ok, msg = validate_bank(st.session_state.bank) if st.session_state.bank else (False, "No content loaded.")
     if not ok:
-        # If you just created the repo, content_bank.json should be valid.
-        # This is here to keep the app from silently crashing when content is wrong.
         st.session_state.bank = load_json(CONTENT_PATH, {})
         ok2, msg2 = validate_bank(st.session_state.bank) if st.session_state.bank else (False, "No content loaded.")
         if not ok2:
@@ -181,8 +208,6 @@ def persist_progress():
     try:
         save_json(PROGRESS_PATH, st.session_state.progress)
     except Exception:
-        # On Streamlit Community Cloud, writing files is usually OK within the app container,
-        # but it may reset on redeploy. That’s fine for a prototype.
         pass
 
 
@@ -193,16 +218,20 @@ def set_level(level):
 
 def clear_built():
     st.session_state.round["built"] = []
+    st.session_state.round["built_indices"] = []
     st.session_state.round["hint_idx"] = 0
 
 
-def add_token(tok):
-    st.session_state.round["built"].append(tok)
+def add_token(entry):
+    st.session_state.round["built"].append(entry["tok"])
+    st.session_state.round["built_indices"].append(entry["orig_idx"])
 
 
 def undo_token():
-    if st.session_state.round["built"]:
-        st.session_state.round["built"].pop()
+    r = st.session_state.round
+    if r["built"]:
+        r["built"].pop()
+        r["built_indices"].pop()
 
 
 def check_answer():
@@ -216,7 +245,6 @@ def check_answer():
     if correct:
         p["correct"] += 1
         p["by_level"][r["level"]]["correct"] += 1
-
         used_hints = r["hint_idx"]
         gained = max(2, 10 - 2 * used_hints)
         p["xp"] += gained
@@ -249,10 +277,9 @@ def next_hint():
 st.set_page_config(page_title="French Sentence Builder", layout="wide")
 init_state()
 
-st.title("🇫🇷 French Sentence Builder — Prototype")
-st.caption("Prototype: click-to-build sentence order (fast to validate the learning loop). Upload new content as JSON/CSV from the sidebar.")
+st.title("🇫🇷 French Sentence Builder")
 
-# Sidebar: levels + admin content upload
+# Sidebar
 with st.sidebar:
     st.header("Game")
     level = st.selectbox("Level", LEVELS, index=LEVELS.index(st.session_state.level))
@@ -294,7 +321,7 @@ with st.sidebar:
                 st.code(msg)
             else:
                 st.session_state.bank = bank
-                save_json(CONTENT_PATH, bank)  # persist in repo container
+                save_json(CONTENT_PATH, bank)
                 st.success("✅ Content updated! Starting a fresh round.")
                 st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
         except Exception as e:
@@ -307,27 +334,30 @@ with st.sidebar:
         mime="application/json",
     )
 
+# -------------------------
 # Main UI
+# -------------------------
 r = st.session_state.round
 col1, col2 = st.columns([1.1, 0.9], gap="large")
 
 with col1:
-    st.subheader(f"Round — Level {r['level']}")
-    st.markdown(f"**English:** {r['en']}")
+    st.subheader(f"Level {r['level']}")
+    st.markdown(f"### Translate to French:")
+    st.markdown(f"> {r['en']}")
 
-    st.write("**Your built French sentence:**")
-    built_str = format_tokens(r["built"]) if r["built"] else "_(empty)_"
+    st.write("**Your sentence so far:**")
+    built_str = format_tokens(r["built"]) if r["built"] else "_(empty — click words on the right)_"
     st.code(built_str, language="text")
 
     b1, b2, b3, b4 = st.columns([0.2, 0.2, 0.2, 0.4])
     with b1:
-        if st.button("Undo"):
+        if st.button("⬅ Undo"):
             undo_token()
     with b2:
-        if st.button("Clear"):
+        if st.button("🗑 Clear"):
             clear_built()
     with b3:
-        if st.button("Hint"):
+        if st.button("💡 Hint"):
             next_hint()
     with b4:
         submitted = st.button("Check ✅", type="primary")
@@ -341,26 +371,50 @@ with col1:
             st.success(msg)
             with st.expander("Show answer"):
                 st.write(r["fr"])
-            if st.button("Next round ▶"):
+            if st.button("Next ▶"):
                 st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
         else:
             st.error(msg)
 
 with col2:
-    st.subheader("Word bank (click to add)")
-    st.caption("You must place punctuation tokens too (., ?, etc.).")
+    st.subheader("Word buckets")
 
-    cols = st.columns(4)
-    for i, tok in enumerate(r["shuffled"]):
-        with cols[i % 4]:
-            if st.button(tok, key=f"tok_{i}_{tok}"):
-                add_token(tok)
+    use_buckets = r["word_types"] is not None
+
+    if use_buckets:
+        st.caption("Pick words from each bucket to build the sentence. Used words disappear.")
+        buckets = get_display_buckets(r)
+
+        if not buckets:
+            st.success("All words placed! Hit **Check** to verify.")
+        else:
+            for label, color, entries in buckets:
+                st.markdown(
+                    f"<div style='background:{color}22;border-left:4px solid {color};"
+                    f"padding:6px 10px;border-radius:4px;margin-bottom:4px;'>"
+                    f"<b style='color:{color}'>{label}</b></div>",
+                    unsafe_allow_html=True,
+                )
+                btn_cols = st.columns(min(len(entries), 5))
+                for j, entry in enumerate(entries):
+                    with btn_cols[j % 5]:
+                        if st.button(entry["tok"], key=f"bucket_{label}_{entry['orig_idx']}"):
+                            add_token(entry)
+                st.write("")
+
+    else:
+        # Flat fallback for levels without word_types (A2–C2)
+        st.caption("Click words to add them. Punctuation tokens must be placed too.")
+        cols = st.columns(4)
+        used = set(r["built_indices"])
+        for i, entry in enumerate(r["shuffled"]):
+            if entry["orig_idx"] not in used:
+                with cols[i % 4]:
+                    if st.button(entry["tok"], key=f"tok_{i}_{entry['tok']}"):
+                        add_token(entry)
 
     st.divider()
-    if st.button("Shuffle word bank 🔀"):
+    if st.button("Shuffle 🔀"):
         random.shuffle(r["shuffled"])
-    if st.button("New round (same level) 🎲"):
+    if st.button("New round 🎲"):
         st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
-
-st.divider()
-st.caption("This is intentionally simple. Next upgrade: accept multiple valid variants + a review/mistakes mode.")

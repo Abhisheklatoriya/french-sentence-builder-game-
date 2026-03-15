@@ -1,15 +1,15 @@
 {
   "A1": [
-    {"en": "I am Abhi.", "fr": "Je suis Abhi.", "hints": ["Start with the subject pronoun: Je", "Use the verb 'être' in the present: suis", "Name comes at the end; keep the period."]},
-    {"en": "I live in Toronto.", "fr": "J'habite à Toronto.", "hints": ["Start with J' + verb", "The verb is 'habiter' in present: habite", "Use the preposition for a city: à"]},
-    {"en": "I like coffee.", "fr": "J'aime le café.", "hints": ["Start with J' + verb", "The verb is 'aimer' in present: aime", "Use an article before the noun: le"]},
-    {"en": "Where is the bathroom?", "fr": "Où sont les toilettes ?", "hints": ["Question word first: Où", "Toilettes is plural in French", "Remember French spacing: space before ?"]},
-    {"en": "It is 8 o'clock.", "fr": "Il est huit heures.", "hints": ["Start with Il est", "Use 'heures' (plural) after numbers except 1", "No 'à' needed here."]},
-    {"en": "I have two sisters.", "fr": "J'ai deux sœurs.", "hints": ["Start with J' + avoir", "Avoir in present: ai", "Plural noun, keep the s at the end."]},
-    {"en": "I am tired.", "fr": "Je suis fatigué.", "hints": ["Use être: Je suis", "Adjective after the verb", "If female: fatiguée."]},
-    {"en": "We are at home.", "fr": "Nous sommes à la maison.", "hints": ["Start with Nous", "Être in present for 'nous': sommes", "Use à + la for 'home': à la maison"]},
-    {"en": "I don't understand.", "fr": "Je ne comprends pas.", "hints": ["Negation wraps the verb: ne ... pas", "Verb is comprendre in present: comprends", "Keep 'ne' before the verb."]},
-    {"en": "Can you help me, please?", "fr": "Vous pouvez m'aider, s'il vous plaît ?", "hints": ["Formal 'you' is Vous", "Verb is pouvoir: pouvez", "Use the infinitive with apostrophe: m'aider"]}
+    {"en": "I am Abhi.", "fr": "Je suis Abhi.", "hints": ["Start with the subject pronoun: Je", "Use the verb 'être' in the present: suis", "Name comes at the end; keep the period."], "word_types": ["pronoun", "verb", "noun", "punct"]},
+    {"en": "I live in Toronto.", "fr": "J'habite à Toronto.", "hints": ["Start with J' + verb", "The verb is 'habiter' in present: habite", "Use the preposition for a city: à"], "word_types": ["verb", "prep", "noun", "punct"]},
+    {"en": "I like coffee.", "fr": "J'aime le café.", "hints": ["Start with J' + verb", "The verb is 'aimer' in present: aime", "Use an article before the noun: le"], "word_types": ["verb", "article", "noun", "punct"]},
+    {"en": "Where is the bathroom?", "fr": "Où sont les toilettes ?", "hints": ["Question word first: Où", "Toilettes is plural in French", "Remember French spacing: space before ?"], "word_types": ["other", "verb", "article", "noun", "punct"]},
+    {"en": "It is 8 o'clock.", "fr": "Il est huit heures.", "hints": ["Start with Il est", "Use 'heures' (plural) after numbers except 1", "No 'à' needed here."], "word_types": ["pronoun", "verb", "other", "noun", "punct"]},
+    {"en": "I have two sisters.", "fr": "J'ai deux sœurs.", "hints": ["Start with J' + avoir", "Avoir in present: ai", "Plural noun, keep the s at the end."], "word_types": ["verb", "other", "noun", "punct"]},
+    {"en": "I am tired.", "fr": "Je suis fatigué.", "hints": ["Use être: Je suis", "Adjective after the verb", "If female: fatiguée."], "word_types": ["pronoun", "verb", "adjective", "punct"]},
+    {"en": "We are at home.", "fr": "Nous sommes à la maison.", "hints": ["Start with Nous", "Être in present for 'nous': sommes", "Use à + la for 'home': à la maison"], "word_types": ["pronoun", "verb", "prep", "article", "noun", "punct"]},
+    {"en": "I don't understand.", "fr": "Je ne comprends pas.", "hints": ["Negation wraps the verb: ne ... pas", "Verb is comprendre in present: comprends", "Keep 'ne' before the verb."], "word_types": ["pronoun", "other", "verb", "other", "punct"]},
+    {"en": "Can you help me, please?", "fr": "Vous pouvez m'aider, s'il vous plaît ?", "hints": ["Formal 'you' is Vous", "Verb is pouvoir: pouvez", "Use the infinitive with apostrophe: m'aider"], "word_types": ["pronoun", "verb", "verb", "punct", "other", "pronoun", "other", "punct"]}
   ],
   "A2": [
     {"en": "I need to buy a SIM card today.", "fr": "J'ai besoin d'acheter une carte SIM aujourd'hui.", "hints": ["Start with J'ai besoin de", "Use de + infinitive: d'acheter", "Use feminine article: une carte"]},
