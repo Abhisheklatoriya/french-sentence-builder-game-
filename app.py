@@ -202,7 +202,8 @@ def init_state():
         st.session_state.level = "A1"
     if "round" not in st.session_state:
         st.session_state.round = new_round(st.session_state.bank, st.session_state.level)
-    if "check_result" not in st.session_state:
+    # Always reset check_result if no built words (guards against stale session state)
+    if "check_result" not in st.session_state or not st.session_state.round.get("built"):
         st.session_state.check_result = None
 
 
